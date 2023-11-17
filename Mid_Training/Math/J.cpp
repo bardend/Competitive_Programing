@@ -1,0 +1,94 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define all(c) (c).begin(), (c).end()
+#define rall(A) A.rbegin(),A.rend()
+#define pb push_back 
+#define dbg(x) do {cerr << #x <<" = " << (x) << endl; } while (false)
+#define f first 
+#define s second 
+#define endl '\n'
+typedef long long ll;
+typedef pair<int, int> ii;
+typedef vector<int> vi;
+typedef vector<ii> vii;
+//int dx[]={1,0,-1,0};int dy[]={0,1,0,-1}; //4 Direction
+//int dx[]={1,1,0,-1,-1,-1,0,1};int dy[]={0,1,1,1,0,-1,-1,-1};//8 direction
+//int dx[]={2,1,-1,-2,-2,-1,1,2};int dy[]={1,2,2,1,-1,-2,-2,-1};//Knight Direction
+//int dx[]={2,1,-1,-2,-1,1};int dy[]={0,1,1,0,-1,-1}; //Hexagonal Direction
+ 
+ 
+vector<int> minp, primes;
+ 
+constexpr int V = 1E6;
+ 
+int cnt[V + 1];
+ 
+void sieve(int n) {
+    minp.assign(n + 1, 0);
+    primes.clear();
+    
+    for (int i = 2; i <= n; i++) {
+        if (minp[i] == 0) {
+            minp[i] = i;
+            primes.push_back(i);
+        }
+        
+        for (auto p : primes) {
+            if (i * p > n) {
+                break;
+            }
+            minp[i * p] = p;
+            if (p == minp[i]) {
+                break;
+            }
+        }
+    }
+}
+
+const ll inf = 1e12;
+const int maxn = 40;
+
+int main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+    vector<ll>bound(maxn,0ll);
+    bound[1] = inf;
+
+    for(ll i=2; i*i<= inf; i++){
+        ll cur = i;
+        for(int e=2;e<maxn;e++){
+            cur *= i;
+            if(cur > inf) break;
+            bound[e] = max(bound[e], i);
+        }
+    }
+
+    auto pot = [&](ll b, int exp){
+        ll ret = 1;
+        for(int i=0;i<exp;i++)
+            ret *= b;
+        return ret;
+    };
+    int t;cin>>t;
+    for(int tt=1;tt<=t;tt++){
+        ll n;
+        cin>>n;
+        int ok = 0;
+        if(n<0) ok = 1; //negativo
+        n = abs(n);
+        int ans = 1;
+        for(int i=2;i<maxn;i++){
+            if(ok and !(i&1)) continue;
+            ll lo,hi,mi;
+            lo = 1ll, hi = bound[i];
+            while(lo<hi){
+                mi = (hi-lo)/2 + lo;
+                if(pot(mi,i)<n) lo =mi+1;
+                else hi = mi;
+            }
+            if(pot(lo,i) == n) ans = max(ans, i);
+        }
+        cout<<"Case "<<tt<<": "<<ans<<endl;
+    }
+    return 0;
+}
