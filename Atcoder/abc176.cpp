@@ -18,6 +18,11 @@ typedef vector<ii> vii;
 const int maxn = 3e5 +1;
 vector<int>adj[maxn];
 vector<int>c[maxn];
+
+/* We fix the rows then a greedy idea would be you take the best
+ * columns but we take into consideration if it shares an element
+ */
+
 int main(){
 	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
